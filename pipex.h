@@ -13,11 +13,10 @@
 #ifndef PIPEX_H
 # define PIPEX_H
 
-#include <unistd.h> //	close(), read(), write(),
+# include <unistd.h> //	close(), read(), write(),
 //	access(), dup(), dup2(), execve(), fork(), pipe(), unlink()
-#include <stdlib.h> //	malloc(), free(), exit()
-#include <stdio.h> //	perror(), strerror()
-#include <sys/wait.h> //	wait(),, waitpid()
-
+# include <stdlib.h> //	malloc(), free(), exit()
+# include <stdio.h> //	perror(), strerror()
+# include <sys/wait.h> //	wait(),, waitpid()
 
 #endif
