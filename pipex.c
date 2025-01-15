@@ -6,21 +6,39 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 11:12:30 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/01/15 15:25:22 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/01/15 16:53:54 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-static int	check_argument(int argc, char **argv);
-//static int	check_argument_bonus(int argc, char **argv):
+//static int	check_argument(int argc, char **argv);
+static int	check_argument_bonus(int argc, char **argv);
+static void	deliverance_input_visualization(int argc, char **argv);/////////////
 
 int	main(int argc, char **argv)
 {
-	if (check_argument(argc, argv) != 0)
+	if (check_argument_bonus(argc, argv) != 0)
 		return (1);
+	deliverance_input_visualization(argc, argv);////////////////////////////////
 }
 
+////////////////////////////////////////////////////////////////////////////////
+static void	deliverance_input_visualization(int argc, char **argv)
+{
+	int	i_deliverance;
+
+	printf("Interpretation:\n< %s %s ", argv[1], argv[2]);
+	i_deliverance = 3;
+	while (i_deliverance < argc - 1)
+	{
+		printf(" | %s ", argv[i_deliverance]);
+		i_deliverance++;
+	}
+	printf("> %s\n", argv[argc - 1]);
+}
+////////////////////////////////////////////////////////////////////////////////
+/*
 static int	check_argument(int argc, char **argv)
 {
 	int	result;
@@ -40,8 +58,8 @@ static int	check_argument(int argc, char **argv)
 	}
 	return (result);
 }
+*/
 
-/*
 static int	check_argument_bonus(int argc, char **argv)
 {
 	int	result;
@@ -55,4 +73,3 @@ static int	check_argument_bonus(int argc, char **argv)
 	}
 	return (result);
 }
-*/

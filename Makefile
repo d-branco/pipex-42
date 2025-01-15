@@ -6,9 +6,18 @@
 #    By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/15 10:43:59 by abessa-m          #+#    #+#              #
-#    Updated: 2025/01/15 15:27:03 by abessa-m         ###   ########.fr        #
+#    Updated: 2025/01/15 16:52:33 by abessa-m         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+
+test:
+	@echo -n "$(YELLOW)" ; \
+	norminette *.c | grep -v -E \
+	"25 lines|Comment is invalid in this scope|Too many variables declarations in a function" \
+	| grep Error: ; echo -n "$(COR)\n" ; \
+	cc pipex.c \
+	&&./a.out infile "grep a1" "grep a" "grep 1" "wc -w" outfile; \
+	echo "\nReturn value: $$?"
 
 NAME	:= pipex
 #################################################################### Compiler  #

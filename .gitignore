@@ -1,6 +1,10 @@
 # Project files
 *.zip
 *ignoreme*
+infile
+outfile
+test
+pipex
 
 # CLion
 .idea/
