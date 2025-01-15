@@ -1,6 +1,6 @@
 # Project files
 *.zip
-*ignoreme*.*
+*ignoreme*
 
 # CLion
 .idea/

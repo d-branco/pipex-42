@@ -6,17 +6,22 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 07:54:14 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/01/15 07:54:15 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/01/15 10:33:54 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
+#include "pipex.h"
 
 int	main(void)
 {
-	char	*msg_erro;
+	char	*clear_argv[2];
+	char	*envp[2];
 
-	msg_erro = "This is an example of an error message in English.";
-	perror(msg_erro);
-	printf("After the error message.\n");
+	envp[0] = "TERM=xterm";
+	envp[1] = NULL;
+	clear_argv[0] = "clear";
+	clear_argv[1] = NULL;
+	execve("/usr/bin/clear", clear_argv, envp);
+
+	return (1);
 }

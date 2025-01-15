@@ -23,6 +23,8 @@ both can be combined. Example: `$ grep "pattern" < input.txt > results.txt`
 	EOF
 	# Prints all three lines
 	´´´
+Documentation:
+	https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_07
 
 File Operations:
 open():		Opens a file or creates it if it doesn't exist, returns a file descriptor.
@@ -55,6 +57,3 @@ waitpid():	Waits for a specific child process to change state.
 File System Operations:
 pipe():		Creates a pipe for inter-process communication.
 unlink():	Removes a file name from the filesystem.
-
-Useful resources:
-https://www.youtube.com/playlist?list=PLfqABt5AS4FkW5mOn2Tn9ZZLLDwA3kZUY
