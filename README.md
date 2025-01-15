@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   README.md                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/15 11:34:40 by abessa-m          #+#    #+#             */
+/*   Updated: 2025/01/15 11:34:41 by abessa-m         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 Input output redirection
 "<" Input redirection
 	- takes input from a file as if from the command line.
