@@ -6,20 +6,22 @@
 #    By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/15 10:43:59 by abessa-m          #+#    #+#              #
-#    Updated: 2025/01/15 16:52:33 by abessa-m         ###   ########.fr        #
+#    Updated: 2025/01/17 11:13:18 by abessa-m         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-test:
+test: re
 	@echo -n "$(YELLOW)" ; \
 	norminette *.c | grep -v -E \
-	"25 lines|Comment is invalid in this scope|Too many variables declarations in a function" \
-	| grep Error: ; echo -n "$(COR)\n" ; \
+	"25 lines|Comment is invalid in this scope" \
+	| grep Error ; echo -n "$(COR)\n" ; \
 	cc pipex.c \
-	&&./a.out infile "grep a1" "grep a" "grep 1" "wc -w" outfile; \
-	echo "\nReturn value: $$?"
+	&&./a.out infile "grep a1" "grep 42" "grep 225" "wc -w" outfile; \
+	echo "\nReturn value: $$?" ; \
+	rm -f a.out test pipex outfile
 
-NAME	:= pipex
+NAME		:= pipex
+LIBFT		:= libftpipex.a
 #################################################################### Compiler  #
 CC		:= cc
 CFLAGS	:= -g \
@@ -30,19 +32,25 @@ AR		:= ar rcs
 ##################################################################### Targets  #
 all: $(NAME)
 
-$(NAME):
+$(NAME): $(LIBFT)
 	@$(CC) $(CFLAGS) pipex.c -o $(NAME) \
 	&& echo "$(GRAY)Compiled:$(COR) $(NAME)"
 
-bonus:
+$(LIBFT):
+	@make --no-print-directory -C ft_printf \
+	&& echo "$(PURPLE)Library built: $(LIBFT)$(COR)"
+
+bonus: $(LIBFT)
 
 clean:
+	@make --no-print-directory -C ft_printf clean \
 
 fclean: clean
-	@$(RM) $(NAME) \
+	@@make --no-print-directory -C ft_printf fclean \
+	&& $(RM) $(NAME) \
 	&& echo "$(GRAY)$(NAME) removed$(COR)"
 
-re: fclean all
+re: fclean all	
 	@echo "$(GRAY)redone$(COR)"
 ###################################################################### Colors  #
 # COlor Remove

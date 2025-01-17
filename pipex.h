@@ -16,7 +16,8 @@
 # include <unistd.h> //	close(), read(), write(),
 //	access(), dup(), dup2(), execve(), fork(), pipe(), unlink()
 # include <stdlib.h> //	malloc(), free(), exit()
-# include <stdio.h> //	perror(), strerror()
+# include <stdio.h> //	perror()
+//# include <string.h> //	strerror()
 # include <sys/wait.h> //	wait(),, waitpid()
 
 #endif
