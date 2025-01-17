@@ -6,7 +6,7 @@
 #    By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/15 10:43:59 by abessa-m          #+#    #+#              #
-#    Updated: 2025/01/17 11:13:18 by abessa-m         ###   ########.fr        #
+#    Updated: 2025/01/17 15:45:08 by abessa-m         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,13 +15,11 @@ test: re
 	norminette *.c | grep -v -E \
 	"25 lines|Comment is invalid in this scope" \
 	| grep Error ; echo -n "$(COR)\n" ; \
-	cc pipex.c \
-	&&./a.out infile "grep a1" "grep 42" "grep 225" "wc -w" outfile; \
-	echo "\nReturn value: $$?" ; \
-	rm -f a.out test pipex outfile
+	valgrind -q ./pipex infile "grep a1" "grep 42" "grep 225" "wc -w" outfile; \
+	echo "\nReturn value: $$?" ; 
 
 NAME		:= pipex
-LIBFT		:= libftpipex.a
+LIBFT		:= ./ft_printf/libftprintf.a
 #################################################################### Compiler  #
 CC		:= cc
 CFLAGS	:= -g \
@@ -29,12 +27,20 @@ CFLAGS	:= -g \
 ########################################################## Intermidiate steps  #
 RM		:= rm -f
 AR		:= ar rcs
+########################################################## Objects and Headers  #
+SRCS	= pipex.c \
+	pipex-exec.c
+OBJS	= $(SRCS:.c=.o)
+HEADERS	= pipex.h
 ##################################################################### Targets  #
-all: $(NAME)
+all: $(LIBFT) $(NAME)
 
-$(NAME): $(LIBFT)
-	@$(CC) $(CFLAGS) pipex.c -o $(NAME) \
+$(NAME): $(OBJS) $(LIBFT)
+	@$(CC) $(CFLAGS) $(SRCS) $(LIBFT) -o $(NAME) \
 	&& echo "$(GRAY)Compiled:$(COR) $(NAME)"
+
+%.o: %.c $(HEADERS)
+	@$(CC) $(CFLAGS) -c $< -o $@ \
 
 $(LIBFT):
 	@make --no-print-directory -C ft_printf \

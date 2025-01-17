@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test.c                                             :+:      :+:    :+:   */
+/*   pipex-exec.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 07:54:14 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/01/17 10:50:07 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/01/17 15:49:22 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,19 @@
 cc test.c -o test && ./test; rm test
 */
 
-void	execute_cmd(char **cmd_args);
-
-int	main(void)
+void	execute_cmd(char **cmd_args, char **envp)
 {
-	char *argumentos[] = {"/bin/ls", "-l", NULL};
+	int	id;
 
-	execute_cmd(argumentos);
-}
-
-void	execute_cmd(char **cmd_args)
-{
-	execve(cmd_args[0], cmd_args, NULL);
-	perror("");
+	if (0 == (id = fork()))
+	{
+		execve(cmd_args[0], cmd_args, NULL);
+		perror("");
+	}
+	else if (id == -1)
+		perror("Forking error.\n");
+	else
+		wait(NULL);
 }
 
 
