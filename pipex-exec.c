@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 07:54:14 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/01/17 15:49:22 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/01/18 10:44:04 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,28 @@
 cc test.c -o test && ./test; rm test
 */
 
+static char	*find_path_from_envp(char **cmd_args, char **envp);
+static void	free_splitted_str(char **str);
+
 void	execute_cmd(char **cmd_args, char **envp)
 {
-	int	id;
+	int		id;
+	char	*cmd_with_path;
 
-	if (0 == (id = fork()))
+	id = fork();
+	if (id == 0)
 	{
-		execve(cmd_args[0], cmd_args, NULL);
-		perror("");
+		if (cmd_args[0][0] == '/')
+		{
+			execve(cmd_args[0], cmd_args, NULL);
+			perror("");
+		}
+		else
+		{
+			cmd_with_path = find_path_from_envp(cmd_args, envp);
+			execve(cmd_with_path, cmd_args, NULL);
+			perror("");
+		}
 	}
 	else if (id == -1)
 		perror("Forking error.\n");
@@ -31,6 +45,53 @@ void	execute_cmd(char **cmd_args, char **envp)
 		wait(NULL);
 }
 
+static char	*find_path_from_envp(char **cmd_args, char **envp)
+{
+	char	**path_splitted;
+	char	*path;
+	int		i;
+
+	i = 0;
+	while (ft_strnstr(envp[i], "PATH=", 5) == NULL)
+		i++;
+	path_splitted = ft_split(envp[i] + 5, ':');
+	i = 0;
+	while (path_splitted[i])
+	{
+		path = ft_strjoin(path_splitted[i], "/");
+		path = ft_strjoin(path, cmd_args[0]);
+		if (access(path, F_OK | X_OK) == 0)
+		{
+			free_splitted_str(path_splitted);
+			return (path);
+		}
+		free(path);
+		i++;
+	}
+	free_splitted_str(path_splitted);
+	return (NULL);
+}
+
+static void	free_splitted_str(char **str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		free (str[i]);
+		i++;
+	}
+	free (str);
+}
+
+/*	clear; cc pipex-exec.c ./ft_printf/libftprintf.a && valgrind ./a.out
+int	main(int argc, char** argv, char **envp)
+{
+	char	*cmd_args[] = {"echo", "echo", "Funciona", NULL};
+
+	execute_cmd(cmd_args, envp);
+}*/
 
 /*int	main(int argc, char **argv) //communicating with fork and pipe
 {
@@ -73,7 +134,6 @@ void	execute_cmd(char **cmd_args, char **envp)
 
 	return (0);
 }*/
-
 
 /*	LIMPA O TERMINAL
 static int	ad_clear_terminal(void);

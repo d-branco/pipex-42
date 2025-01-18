@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 11:12:30 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/01/17 15:39:26 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/01/18 10:36:58 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,7 @@ int	main(int argc, char **argv, char **envp)
 	if (check_argument_bonus(argc, argv) != 0)
 		return (1);
 	deliverance_input_visualization(argc, argv); // Remove me
-	
-	char *argumentos[] = {"/bin/ls", "-l", NULL};
+	char *argumentos[] = {"ls", "-l", NULL};
 	execute_cmd(argumentos, envp);
 }
 
