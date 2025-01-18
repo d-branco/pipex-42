@@ -20,7 +20,7 @@
 # include <stdlib.h> //	malloc(), free(), exit()
 # include <stdio.h> //	perror()
 //# include <string.h> //	strerror()
-# include <sys/wait.h> //	wait(),, waitpid()
+# include <sys/wait.h> //	wait(), waitpid()
 
 void	execute_cmd(char **cmd_args, char **envp);
 

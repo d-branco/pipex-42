@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 07:54:14 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/01/18 10:44:04 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/01/18 10:57:19 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static char	*find_path_from_envp(char **cmd_args, char **envp)
 	{
 		path = ft_strjoin(path_splitted[i], "/");
 		path = ft_strjoin(path, cmd_args[0]);
-		if (access(path, F_OK | X_OK) == 0)
+		if (access(path, X_OK) == 0)
 		{
 			free_splitted_str(path_splitted);
 			return (path);
