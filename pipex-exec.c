@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 07:54:14 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/01/18 10:57:19 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/01/19 11:32:01 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ cc test.c -o test && ./test; rm test
 */
 
 static char	*find_path_from_envp(char **cmd_args, char **envp);
-static void	free_splitted_str(char **str);
+void		free_splitted_str(char **str);
 
 void	execute_cmd(char **cmd_args, char **envp)
 {
@@ -35,6 +35,7 @@ void	execute_cmd(char **cmd_args, char **envp)
 		else
 		{
 			cmd_with_path = find_path_from_envp(cmd_args, envp);
+			ft_printf("About to exec\n\n"); //
 			execve(cmd_with_path, cmd_args, NULL);
 			perror("");
 		}
@@ -72,7 +73,7 @@ static char	*find_path_from_envp(char **cmd_args, char **envp)
 	return (NULL);
 }
 
-static void	free_splitted_str(char **str)
+void	free_splitted_str(char **str)
 {
 	int	i;
 

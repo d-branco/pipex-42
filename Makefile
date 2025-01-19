@@ -6,7 +6,7 @@
 #    By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/15 10:43:59 by abessa-m          #+#    #+#              #
-#    Updated: 2025/01/18 11:03:47 by abessa-m         ###   ########.fr        #
+#    Updated: 2025/01/19 11:29:23 by abessa-m         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ test: re
 	"25 lines|Comment is invalid in this scope" \
 	| grep Error ; echo -n "$(COR)\n" ; \
 	valgrind -q --trace-children=yes --leak-check=full \
-	./pipex infile "grep a1" "grep 42" "grep 225" "wc -w" outfile; \
+	./pipex infile "cat" "grep a1" "grep 225" "wc -w" outfile; \
 	echo "\nReturn value: $$?" ; \
 	make --no-print-directory -C ft_printf clean 
 
@@ -24,14 +24,13 @@ NAME		:= pipex
 LIBFT		:= ./ft_printf/libftprintf.a
 #################################################################### Compiler  #
 CC		:= cc
-CFLAGS	:= -g \
-#-Wall -Werror -Wextra
+CFLAGS	:= -g -Wall -Werror -Wextra
 ########################################################## Intermidiate steps  #
 RM		:= rm -f
 AR		:= ar rcs
 ######################################################### Objects and Headers  #
 SRCS	= pipex.c \
-	pipex-exec.c
+	pipex-exec.c 
 OBJS	= $(SRCS:.c=.o)
 HEADERS	= pipex.h
 ##################################################################### Targets  #

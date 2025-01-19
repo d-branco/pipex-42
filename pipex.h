@@ -23,5 +23,6 @@
 # include <sys/wait.h> //	wait(), waitpid()
 
 void	execute_cmd(char **cmd_args, char **envp);
+void	free_splitted_str(char **str);
 
 #endif
