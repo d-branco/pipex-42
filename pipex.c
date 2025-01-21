@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 11:12:30 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/01/21 08:32:37 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/01/21 10:40:16 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,23 @@ int	main(int argc, char **argv, char **envp)
 		i++;
 	}
 	commands[i] = last_command(argc, argv);
+
+	ft_printf("Inputs:\n");
+	i = 0;
+	while(i < argc - 3)
+	{
+		int j = 0;
+		ft_printf("    ");
+		while (commands[i][j])
+		{
+			ft_printf("%s, ", commands[i][j]);
+			j++;
+		}
+		ft_printf("%s\n", commands[i][j]);
+		i++;
+	}
+	ft_printf("\n");
+	
 	execute_pipeline(commands, argc - 3, envp, argv[argc - 1]);
 	i = 0;
 	while (i < argc - 3)
@@ -56,16 +73,16 @@ char	**last_command(int argc, char **argv)
 char	**first_command(char **argv)
 {
 	char	**arguments;
-	char	*temp;
+	char	*temp1;
 	char	*temp2;
 
-	temp = ft_strdup(" ");
-	temp2 = ft_strjoin(argv[2], temp);
-	free(temp);
-	temp = ft_strjoin(temp2, argv[1]);
+	temp1 = ft_strdup(" ");
+	temp2 = ft_strjoin(argv[2], temp1);
+	free(temp1);
+	temp1 = ft_strjoin(temp2, argv[1]);
 	free(temp2);
-	arguments = ft_split(temp, ' ');
-	free(temp);
+	arguments = ft_split(temp1, ' ');
+	free(temp1);
 	return (arguments);
 }
 

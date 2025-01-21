@@ -1,9 +1,9 @@
 # Project files
 *.zip
 *ignoreme*
-infile
-outfile
-test
+*infile*
+*outfile*
+*test*
 pipex
 
 # CLion

@@ -6,7 +6,7 @@
 #    By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/15 10:43:59 by abessa-m          #+#    #+#              #
-#    Updated: 2025/01/21 09:15:41 by abessa-m         ###   ########.fr        #
+#    Updated: 2025/01/21 10:09:07 by abessa-m         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,8 +16,9 @@ test: re
 	"25 lines|Comment is invalid in this scope" \
 	| grep Error ; echo -n "$(COR)\n" ; \
 	valgrind -q --trace-children=yes --leak-check=full \
-	./pipex infile "cat" "grep a1" "grep 225" "wc -w" outfile; \
+	./pipex infile "cat" "cat -e" "cat" "wc -w" outfile; \
 	echo "\nReturn value: $$?" ; \
+	$(RM) *.o *.gch ; \
 	make --no-print-directory -C ft_printf clean 
 
 NAME		:= pipex
