@@ -6,92 +6,53 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 08:34:55 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/01/21 08:35:51 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/01/21 09:13:40 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	execute_pipeline(char ***cmd, int num_cmd, char **envp, char *outfile)
+static int	open_output_file(char *file)
 {
-	int	i;
-	int	j;
-	int	pid;
 	int	fd_out;
-	int	*pipe_fd;
 
-	fd_out = open(outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	fd_out = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd_out == -1)
 	{
 		perror("Failed to open output file");
-		return ;
+		return (-1);
 	}
-	pipe_fd = (int *) malloc(sizeof(int *) * (2 * (num_cmd - 1)));
+	return (fd_out);
+}
+
+static int	*create_pipes(int num_cmd, int fd_out)
+{
+	int	*pipe_fd;
+	int	i;
+
+	pipe_fd = (int *)malloc(sizeof(int) * (2 * (num_cmd - 1)));
 	if (!pipe_fd)
 	{
 		perror("Malloc failed");
 		close(fd_out);
-		return ;
+		return (NULL);
 	}
 	i = 0;
 	while (i < num_cmd - 1)
 	{
 		if (pipe(pipe_fd + 2 * i) == -1)
 		{
-			perror("pipe failed");
-			close(fd_out);
-			exit(1);
+			handle_error("pipe failed", fd_out);
 		}
 		i++;
 	}
-	i = 0;
-	while (i < num_cmd)
-	{
-		pid = fork();
-		if (pid == -1)
-		{
-			perror("fork failed");
-			close(fd_out);
-			exit(1);
-		}
-		if (pid == 0)
-		{
-			if (i > 0)
-			{
-				if (dup2(pipe_fd[2 * (i - 1)], STDIN_FILENO) == -1)
-				{
-					perror("dup2 failed");
-					exit(1);
-				}
-			}
-			if (i < num_cmd - 1)
-			{
-				if (dup2(pipe_fd[2 * i + 1], STDOUT_FILENO) == -1)
-				{
-					perror("dup2 failed");
-					exit(1);
-				}
-			}
-			else
-			{
-				if (dup2(fd_out, STDOUT_FILENO) == -1)
-				{
-					perror("dup2 failed");
-					exit(1);
-				}
-			}
-			j = 0;
-			while (j < 2 * (num_cmd - 1))
-			{
-				close(pipe_fd[j]);
-				j++;
-			}
-			close(fd_out);
-			execute_cmd(cmd[i], envp);
-			exit(1);
-		}
-		i++;
-	}
+	return (pipe_fd);
+}
+
+static void	close_all_pipes(int *pipe_fd, int num_cmd, int fd_out)
+{
+	int	i;
+
 	i = 0;
 	while (i < 2 * (num_cmd - 1))
 	{
@@ -99,16 +60,51 @@ void	execute_pipeline(char ***cmd, int num_cmd, char **envp, char *outfile)
 		i++;
 	}
 	close(fd_out);
-	free(pipe_fd);
+}
+
+static void	setup_pipeline(int num_cmd, char *file, int *fd_out, int **pipe_fd)
+{
+	*fd_out = open_output_file(file);
+	if (*fd_out == -1)
+		return ;
+	*pipe_fd = create_pipes(num_cmd, *fd_out);
+	if (!*pipe_fd)
+	{
+		close(*fd_out);
+		return ;
+	}
+}
+
+void	execute_pipeline(char ***cmd, int num_cmd, char **envp, char *file)
+{
+	int		fd_out;
+	int		*pipe_fd;
+	int		i;
+	pid_t	pid;
+
+	setup_pipeline(num_cmd, file, &fd_out, &pipe_fd);
 	i = 0;
 	while (i < num_cmd)
 	{
-		wait(NULL);
+		pid = fork();
+		if (pid == -1)
+			handle_error("fork failed", fd_out);
+		if (pid == 0)
+		{
+			redirect_child(i, num_cmd, pipe_fd, fd_out);
+			close_all_pipes(pipe_fd, num_cmd, fd_out);
+			execute_cmd(cmd[i], envp);
+			exit(1);
+		}
 		i++;
 	}
+	close_all_pipes(pipe_fd, num_cmd, fd_out);
+	free(pipe_fd);
+	wait_for_children(num_cmd);
 }
+
 /*
-void	execute_pipeline(char ***cmd, int num_cmd, char **envp, char *outfile)
+void	execute_pipeline(char ***cmd, int num_cmd, char **envp, char *file)
 {
 	int	i;
 	int	j;
@@ -117,7 +113,7 @@ void	execute_pipeline(char ***cmd, int num_cmd, char **envp, char *outfile)
 	int	*pipe_fd; // Array to hold pipe file descriptors
 	
 	// Open output file
-	fd_out = open(outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	fd_out = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd_out == -1)
 	{
 		perror("Failed to open output file");

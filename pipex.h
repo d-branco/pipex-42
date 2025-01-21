@@ -21,10 +21,14 @@
 # include <stdio.h> //	perror()
 //# include <string.h> //	strerror()
 # include <sys/wait.h> //	wait(), waitpid()
-#include <fcntl.h> //open()
+# include <fcntl.h> //open()
 
 void	execute_cmd(char **cmd_args, char **envp);
 void	free_splitted_str(char **str);
-void	execute_pipeline(char ***commands, int num_commands, char **envp, char *outfile);
+void	execute_pipeline(char ***cmd, int num_cmd, char **envp, char *outfile);
+
+void	handle_error(char *message, int fd_out);
+void	redirect_child(int i, int num_cmd, int *pipe_fd, int fd_out);
+void	wait_for_children(int num_cmd);
 
 #endif
