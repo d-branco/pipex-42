@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 07:54:14 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/01/20 18:38:49 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/01/21 08:29:59 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,56 +84,6 @@ void	free_splitted_str(char **str)
 	}
 	free (str);
 }
-
-/*	clear; cc pipex-exec.c ./ft_printf/libftprintf.a && valgrind ./a.out
-int	main(int argc, char** argv, char **envp)
-{
-	char	*cmd_args[] = {"echo", "echo", "Funciona", NULL};
-
-	execute_cmd(cmd_args, envp);
-}*/
-
-/*int	main(int argc, char **argv) //communicating with fork and pipe
-{
-	int	fd[2];
-	int	id;
-	int	x;
-	int	y;
-
-	if (pipe(fd) ==- 1)
-	{
-		perror("An error occured opening the pipe\n");
-		return (1);
-	}
-	if((id = fork()) == -1)
-		return (3);
-	if (id == 0) // in the child process
-	{
-		close(fd[0]);
-		printf("Insere um numero: ");
-		scanf("%d", &x);
-		if ((write(fd[1], &x, sizeof(int))) == -1)
-		{
-			printf("Erro em write()\n");
-			return (2);
-		}
-		close(fd[1]);
-	}
-	else // in the parent process
-	{
-		close(fd[1]);
-		if ((read(fd[0], &y, sizeof(int))) == -1)
-		{
-			printf("Erro em read()\n");
-			return (1);
-		}
-		y = y * 3;
-		close(fd[0]);
-		printf("Obteve-se do child: %d\n", y);
-	}
-
-	return (0);
-}*/
 
 /*	LIMPA O TERMINAL
 static int	ad_clear_terminal(void);

@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 11:12:30 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/01/19 11:32:28 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/01/21 08:32:37 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,33 +15,58 @@
 //static int	check_argument(int argc, char **argv);
 static int	check_argument_bonus(int argc);
 static void	deliverance_input_visualization(int argc, char **argv);
+char		**first_command(char **argv);
+char		**last_command(int argc, char **argv);
 
 int	main(int argc, char **argv, char **envp)
 {
-	char	**argumentos;
-	char	*temp;
-	char	*temp2;
-	int		j;
+	int		i;
+	char	***commands;
 
 	if (check_argument_bonus(argc) != 0)
 		return (1);
-	deliverance_input_visualization(argc, argv); //
+	deliverance_input_visualization(argc, argv);
+	commands = malloc((argc - 3) * sizeof(char **));
+	commands[0] = first_command(argv);
+	i = 1;
+	while (i < argc - 4)
+	{
+		commands[i] = ft_split(argv[i + 2], ' ');
+		i++;
+	}
+	commands[i] = last_command(argc, argv);
+	execute_pipeline(commands, argc - 3, envp, argv[argc - 1]);
+	i = 0;
+	while (i < argc - 3)
+	{
+		free_splitted_str(commands[i]);
+		i++;
+	}
+	free(commands);
+}
+
+char	**last_command(int argc, char **argv)
+{
+	char	**arguments;
+
+	arguments = ft_split(argv[argc - 2], ' ');
+	return (arguments);
+}
+
+char	**first_command(char **argv)
+{
+	char	**arguments;
+	char	*temp;
+	char	*temp2;
+
 	temp = ft_strdup(" ");
 	temp2 = ft_strjoin(argv[2], temp);
 	free(temp);
 	temp = ft_strjoin(temp2, argv[1]);
 	free(temp2);
-	argumentos = ft_split(temp, ' ');
+	arguments = ft_split(temp, ' ');
 	free(temp);
-	j = 0;
-	while (argumentos[j])
-	{
-		ft_printf("arg: %s\n", argumentos[j]);
-		j++;
-	}
-	ft_printf("arg: %s\n\n", argumentos[j]);
-	execute_cmd(argumentos, envp);
-	free_splitted_str(argumentos);
+	return (arguments);
 }
 
 static void	deliverance_input_visualization(int argc, char **argv)

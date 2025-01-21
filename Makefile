@@ -6,7 +6,7 @@
 #    By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/15 10:43:59 by abessa-m          #+#    #+#              #
-#    Updated: 2025/01/19 11:29:23 by abessa-m         ###   ########.fr        #
+#    Updated: 2025/01/21 07:07:19 by abessa-m         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,7 @@ RM		:= rm -f
 AR		:= ar rcs
 ######################################################### Objects and Headers  #
 SRCS	= pipex.c \
-	pipex-exec.c 
+	pipex-exec.c pipex-piping.c
 OBJS	= $(SRCS:.c=.o)
 HEADERS	= pipex.h
 ##################################################################### Targets  #
