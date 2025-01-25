@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 07:54:14 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/01/21 08:29:59 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/01/25 17:49:11 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,22 @@ static char	*find_path_from_envp(char **cmd_args, char **envp);
 void		free_splitted_str(char **str);
 
 void	execute_cmd(char **cmd_args, char **envp)
+{
+	char	*cmd_with_path;
+
+	if (cmd_args[0][0] == '/')
+	{
+		execve(cmd_args[0], cmd_args, NULL);
+	}
+	else
+	{
+		cmd_with_path = find_path_from_envp(cmd_args, envp);
+		execve(cmd_with_path, cmd_args, NULL);
+	}
+	perror("");
+	free_splitted_str(cmd_args);
+}
+/*void	execute_cmd(char **cmd_args, char **envp)
 {
 	int		id;
 	char	*cmd_with_path;
@@ -43,12 +59,14 @@ void	execute_cmd(char **cmd_args, char **envp)
 		perror("Forking error.\n");
 	else
 		waitpid(id, NULL, 0);
-}
+		free(cmd_with_path);
+}*/
 
 static char	*find_path_from_envp(char **cmd_args, char **envp)
 {
 	char	**path_splitted;
 	char	*path;
+	char	*path2;
 	int		i;
 
 	i = 0;
@@ -59,13 +77,14 @@ static char	*find_path_from_envp(char **cmd_args, char **envp)
 	while (path_splitted[i])
 	{
 		path = ft_strjoin(path_splitted[i], "/");
-		path = ft_strjoin(path, cmd_args[0]);
-		if (access(path, X_OK) == 0)
+		path2 = ft_strjoin(path, cmd_args[0]);
+		free(path);
+		if (access(path2, X_OK) == 0)
 		{
 			free_splitted_str(path_splitted);
-			return (path);
+			return (path2);
 		}
-		free(path);
+		free(path2);
 		i++;
 	}
 	free_splitted_str(path_splitted);

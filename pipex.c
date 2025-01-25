@@ -6,97 +6,86 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 11:12:30 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/01/25 14:59:09 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/01/25 17:38:49 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-//static int	check_argument(int argc, char **argv);
-static int	check_argument_bonus(int argc);
+//static int	check_argument_bonus(int argc);
+static int	check_argument(int argc);
 static void	deliverance_input_visualization(int argc, char **argv);
-char		**first_command(char **argv);
-char		**last_command(int argc, char **argv);
+static void	first_command(char **argv, char **envp, int *pipe_fd);
+static void	last_command(char **argv, char **envp, int *pipe_fd);
 
 int	main(int argc, char **argv, char **envp)
 {
-	int		i;
-	char	***commands;
-	int		infile;
+	int	pipe_fd[2];
+	int	process_id;
 
-	if (check_argument_bonus(argc) != 0)
+	if (check_argument(argc) != 0)
 		return (1);
 	deliverance_input_visualization(argc, argv);
-	infile = open("l.txt", O_RDONLY, 0644);
-	if (infile == -1)
+
+	if (pipe(pipe_fd) == -1)
+		return (perror(NULL), 2);
+
+	process_id = fork();
+	if (process_id == -1)
 		return (perror(NULL), 3);
-	dup2(infile, STDIN_FILENO);
-	commands = malloc((argc - 3) * sizeof(char **));
-	commands[0] = first_command(argv);
-	i = 1;
-	while (i < argc - 4)
-	{
-		commands[i] = ft_split(argv[i + 2], ' ');
-		i++;
-	}
-	commands[i] = last_command(argc, argv);
-
-	ft_printf("Inputs:\n");
-	i = 0;
-	while(i < argc - 3)
-	{
-		int j = 0;
-		ft_printf("    ");
-		while (commands[i][j])
-		{
-			ft_printf("%s, ", commands[i][j]);
-			j++;
-		}
-		ft_printf("%s\n", commands[i][j]);
-		i++;
-	}
-	ft_printf("\n");
-	
-	execute_pipeline(commands, argc - 3, envp, argv[argc - 1]);
-	i = 0;
-	while (i < argc - 3)
-	{
-		free_splitted_str(commands[i]);
-		i++;
-	}
-	free(commands);
+	if(process_id == 0)
+		first_command(argv, envp, pipe_fd);
+	waitpid(0, NULL, 0);
+	last_command(argv, envp, pipe_fd);
 }
 
-char	**last_command(int argc, char **argv)
+static void	first_command(char **argv, char **envp, int *pipe_fd)
 {
-	char	**arguments;
+	int		infile_fd;
+	char	**command;
 
-	arguments = ft_split(argv[argc - 2], ' ');
-	return (arguments);
-	close(infile);
+	infile_fd = open(argv[1], O_RDONLY, 0644);
+	if (infile_fd == -1)
+		return ;
+	dup2(infile_fd, STDIN_FILENO);
+	dup2(pipe_fd[1], STDOUT_FILENO);
+	close(pipe_fd[0]);
+	command = ft_split(argv[2], ' ');
+	if (!command)
+		return ;
+	execute_cmd(command, envp);
+	free_splitted_str(command);
+	close(infile_fd);
 }
-
-char	**first_command(char **argv)
+// PIPE read	0
+// PIPE write	1
+//	0	Standard INPUT
+//	1	Standard OUTPUT
+//	2	Standard error
+static void	last_command(char **argv, char **envp, int *pipe_fd)
 {
-	char	**arguments;
-	char	*temp1;
-	char	*temp2;
+	int		outfile_fd;
+	char	**command;
 
-	temp1 = ft_strdup(" ");
-	temp2 = ft_strjoin(argv[2], temp1);
-	free(temp1);
-	temp1 = ft_strjoin(temp2, argv[1]);
-	free(temp2);
-	arguments = ft_split(temp1, ' ');
-	free(temp1);
-	return (arguments);
+	outfile_fd = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0666);
+	if (outfile_fd == -1)
+		return ;
+	dup2(outfile_fd, STDOUT_FILENO);
+	dup2(pipe_fd[0], STDIN_FILENO);
+	close(pipe_fd[1]);
+	command = ft_split(argv[3], ' ');
+	if (!command)
+		return ;
+	execute_cmd(command, envp);
+	free_splitted_str(command);
+	close(outfile_fd);
 }
 
 static void	deliverance_input_visualization(int argc, char **argv)
 {
 	int	i_deliverance;
 
-	ft_printf("Input interpretation:\n< %s %s ", argv[1], argv[2]);
+	ft_printf("Input interpretation:\n< %s %s", argv[1], argv[2]);
 	i_deliverance = 3;
 	while (i_deliverance < argc - 1)
 	{
@@ -106,8 +95,7 @@ static void	deliverance_input_visualization(int argc, char **argv)
 	ft_printf("> %s\n\n", argv[argc - 1]);
 }
 
-/*
-static int	check_argument(int argc, char **argv)
+static int	check_argument(int argc)
 {
 	int	result;
 
@@ -126,8 +114,8 @@ static int	check_argument(int argc, char **argv)
 	}
 	return (result);
 }
-*/
 
+/*
 static int	check_argument_bonus(int argc)
 {
 	int	result;
@@ -140,4 +128,4 @@ static int	check_argument_bonus(int argc)
 		result = 1;
 	}
 	return (result);
-}
+}*/

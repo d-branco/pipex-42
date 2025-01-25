@@ -25,10 +25,5 @@
 
 void	execute_cmd(char **cmd_args, char **envp);
 void	free_splitted_str(char **str);
-void	execute_pipeline(char ***cmd, int num_cmd, char **envp, char *outfile);
-
-void	handle_error(char *message, int fd_out);
-void	redirect_child(int i, int num_cmd, int *pipe_fd, int fd_out);
-void	wait_for_children(int num_cmd);
 
 #endif
