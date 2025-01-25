@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 11:12:30 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/01/25 17:38:49 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/01/25 18:02:39 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,10 @@ static void	first_command(char **argv, char **envp, int *pipe_fd)
 	infile_fd = open(argv[1], O_RDONLY, 0644);
 	if (infile_fd == -1)
 		return ;
+	close(pipe_fd[0]);
 	dup2(infile_fd, STDIN_FILENO);
 	dup2(pipe_fd[1], STDOUT_FILENO);
-	close(pipe_fd[0]);
+	close(pipe_fd[1]);
 	command = ft_split(argv[2], ' ');
 	if (!command)
 		return ;
@@ -70,9 +71,10 @@ static void	last_command(char **argv, char **envp, int *pipe_fd)
 	outfile_fd = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0666);
 	if (outfile_fd == -1)
 		return ;
+	close(pipe_fd[1]);
 	dup2(outfile_fd, STDOUT_FILENO);
 	dup2(pipe_fd[0], STDIN_FILENO);
-	close(pipe_fd[1]);
+	close(pipe_fd[0]);
 	command = ft_split(argv[3], ' ');
 	if (!command)
 		return ;
