@@ -6,7 +6,7 @@
 #    By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/15 10:43:59 by abessa-m          #+#    #+#              #
-#    Updated: 2025/01/21 10:09:07 by abessa-m         ###   ########.fr        #
+#    Updated: 2025/01/25 11:42:14 by abessa-m         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,11 +15,12 @@ test: re
 	norminette *.c | grep -v -E \
 	"25 lines|Comment is invalid in this scope" \
 	| grep Error ; echo -n "$(COR)\n" ; \
-	valgrind -q --trace-children=yes --leak-check=full \
-	./pipex infile "cat" "cat -e" "cat" "wc -w" outfile; \
+	valgrind --quiet --trace-children=yes --leak-check=full --show-leak-kinds=all \
+	./pipex infile "grep as" "grep as" "grep as" "grep as" outfile; \
 	echo "\nReturn value: $$?" ; \
 	$(RM) *.o *.gch ; \
-	make --no-print-directory -C ft_printf clean 
+	make --no-print-directory -C ft_printf clean ; \
+	echo "\n outfile content:\n"; cat outfile; rm outfile
 
 NAME		:= pipex
 LIBFT		:= ./ft_printf/libftprintf.a
