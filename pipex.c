@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 11:12:30 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/01/21 10:40:16 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/01/25 14:59:09 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,15 @@ int	main(int argc, char **argv, char **envp)
 {
 	int		i;
 	char	***commands;
+	int		infile;
 
 	if (check_argument_bonus(argc) != 0)
 		return (1);
 	deliverance_input_visualization(argc, argv);
+	infile = open("l.txt", O_RDONLY, 0644);
+	if (infile == -1)
+		return (perror(NULL), 3);
+	dup2(infile, STDIN_FILENO);
 	commands = malloc((argc - 3) * sizeof(char **));
 	commands[0] = first_command(argv);
 	i = 1;
@@ -68,6 +73,7 @@ char	**last_command(int argc, char **argv)
 
 	arguments = ft_split(argv[argc - 2], ' ');
 	return (arguments);
+	close(infile);
 }
 
 char	**first_command(char **argv)
