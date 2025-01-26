@@ -6,7 +6,7 @@
 #    By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/15 10:43:59 by abessa-m          #+#    #+#              #
-#    Updated: 2025/01/25 16:26:17 by abessa-m         ###   ########.fr        #
+#    Updated: 2025/01/26 12:20:44 by abessa-m         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,8 +15,8 @@ test: re
 	norminette *.c | grep -v -E \
 	"25 lines|Comment is invalid in this scope" \
 	| grep Error ; echo -n "$(COR)\n" ; \
-	valgrind --quiet --trace-children=yes --leak-check=full --show-leak-kinds=all \
-	./pipex infile "cat -e" "grep as" outfile; \
+	valgrind --quiet --show-error-list=yes --track-fds=all \
+	./pipex infile "cat -e" "sleep 4" outfile; \
 	echo "\nReturn value: $$?" ; \
 	$(RM) *.o *.gch ; \
 	make --no-print-directory -C ft_printf clean ; \

@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 07:54:14 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/01/25 18:00:04 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/01/26 12:16:30 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,10 @@ cc test.c -o test && ./test; rm test
 static char	*find_path_from_envp(char **cmd_args, char **envp);
 void		free_splitted_str(char **str);
 
+/* to debugg
+		ft_putstr_fd(cmd_with_path, 2);
+		ft_putstr_fd(":\n", 2);
+copy before the execve()	*/
 void	execute_cmd(char **cmd_args, char **envp)
 {
 	char	*cmd_with_path;

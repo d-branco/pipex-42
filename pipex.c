@@ -6,14 +6,14 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 11:12:30 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/01/25 18:02:39 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/01/26 13:01:26 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-//static int	check_argument_bonus(int argc);
-static int	check_argument(int argc);
+//static int	check_argument_bonus(int argc, char **envp);
+static int	check_argument(int argc, char **envp);
 static void	deliverance_input_visualization(int argc, char **argv);
 static void	first_command(char **argv, char **envp, int *pipe_fd);
 static void	last_command(char **argv, char **envp, int *pipe_fd);
@@ -23,19 +23,17 @@ int	main(int argc, char **argv, char **envp)
 	int	pipe_fd[2];
 	int	process_id;
 
-	if (check_argument(argc) != 0)
+	if (check_argument(argc, envp) != 0)
 		return (1);
 	deliverance_input_visualization(argc, argv);
-
 	if (pipe(pipe_fd) == -1)
 		return (perror(NULL), 2);
-
 	process_id = fork();
 	if (process_id == -1)
 		return (perror(NULL), 3);
-	if(process_id == 0)
+	if (process_id == 0)
 		first_command(argv, envp, pipe_fd);
-	waitpid(0, NULL, 0);
+	waitpid (0, NULL, 0);
 	last_command(argv, envp, pipe_fd);
 }
 
@@ -46,7 +44,10 @@ static void	first_command(char **argv, char **envp, int *pipe_fd)
 
 	infile_fd = open(argv[1], O_RDONLY, 0644);
 	if (infile_fd == -1)
+	{
+		perror(NULL);
 		return ;
+	}
 	close(pipe_fd[0]);
 	dup2(infile_fd, STDIN_FILENO);
 	dup2(pipe_fd[1], STDOUT_FILENO);
@@ -57,7 +58,9 @@ static void	first_command(char **argv, char **envp, int *pipe_fd)
 	execute_cmd(command, envp);
 	free_splitted_str(command);
 	close(infile_fd);
+	exit(1);
 }
+
 // PIPE read	0
 // PIPE write	1
 //	0	Standard INPUT
@@ -70,7 +73,10 @@ static void	last_command(char **argv, char **envp, int *pipe_fd)
 
 	outfile_fd = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0666);
 	if (outfile_fd == -1)
+	{
+		perror(NULL);
 		return ;
+	}
 	close(pipe_fd[1]);
 	dup2(outfile_fd, STDOUT_FILENO);
 	dup2(pipe_fd[0], STDIN_FILENO);
@@ -81,6 +87,7 @@ static void	last_command(char **argv, char **envp, int *pipe_fd)
 	execute_cmd(command, envp);
 	free_splitted_str(command);
 	close(outfile_fd);
+	exit(1);
 }
 
 static void	deliverance_input_visualization(int argc, char **argv)
@@ -97,11 +104,13 @@ static void	deliverance_input_visualization(int argc, char **argv)
 	ft_printf("> %s\n\n", argv[argc - 1]);
 }
 
-static int	check_argument(int argc)
+static int	check_argument(int argc, char **envp)
 {
 	int	result;
 
 	result = 0;
+	if (!envp)
+		result = 3;
 	if (argc < 4 + 1)
 	{
 		write(1, &"Too few arguments!\n", 19);
@@ -118,11 +127,13 @@ static int	check_argument(int argc)
 }
 
 /*
-static int	check_argument_bonus(int argc)
+static int	check_argument_bonus(int argc, char **envp)
 {
 	int	result;
 
 	result = 0;
+	if (!envp)
+		result = 3;
 	if (argc < 4 + 1)
 	{
 		write(1, &"Too few arguments!\n", 19);
