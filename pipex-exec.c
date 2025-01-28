@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 07:54:14 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/01/26 12:16:30 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/01/27 17:47:47 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,9 @@ void	execute_cmd(char **cmd_args, char **envp)
 		if (cmd_with_path == NULL)
 			return ;
 		execve(cmd_with_path, cmd_args, NULL);
+		free(cmd_with_path);
 	}
 	perror(NULL);
-	free(cmd_args);
 	free_splitted_str(cmd_args);
 }
 /*void	execute_cmd(char **cmd_args, char **envp)
