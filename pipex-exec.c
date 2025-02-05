@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 07:54:14 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/01/26 14:20:34 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/02/05 22:02:33 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,32 +41,6 @@ void	execute_cmd(char **cmd_args, char **envp)
 	perror(NULL);
 	free_splitted_str(cmd_args);
 }
-/*void	execute_cmd(char **cmd_args, char **envp)
-{
-	int		id;
-	char	*cmd_with_path;
-
-	id = fork();
-	if (id == 0)
-	{
-		if (cmd_args[0][0] == '/')
-		{
-			execve(cmd_args[0], cmd_args, NULL);
-			perror("");
-		}
-		else
-		{
-			cmd_with_path = find_path_from_envp(cmd_args, envp);
-			execve(cmd_with_path, cmd_args, NULL);
-			perror("");
-		}
-	}
-	else if (id == -1)
-		perror("Forking error.\n");
-	else
-		waitpid(id, NULL, 0);
-		free(cmd_with_path);
-}*/
 
 static char	*find_path_from_envp(char **cmd_args, char **envp)
 {
@@ -109,6 +83,33 @@ void	free_splitted_str(char **str)
 	}
 	free (str);
 }
+
+/*void	execute_cmd(char **cmd_args, char **envp)
+{
+	int		id;
+	char	*cmd_with_path;
+
+	id = fork();
+	if (id == 0)
+	{
+		if (cmd_args[0][0] == '/')
+		{
+			execve(cmd_args[0], cmd_args, NULL);
+			perror("");
+		}
+		else
+		{
+			cmd_with_path = find_path_from_envp(cmd_args, envp);
+			execve(cmd_with_path, cmd_args, NULL);
+			perror("");
+		}
+	}
+	else if (id == -1)
+		perror("Forking error.\n");
+	else
+		waitpid(id, NULL, 0);
+		free(cmd_with_path);
+}*/
 
 /*	LIMPA O TERMINAL
 static int	ad_clear_terminal(void);

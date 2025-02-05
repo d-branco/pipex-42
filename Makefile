@@ -6,12 +6,13 @@
 #    By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/15 10:43:59 by abessa-m          #+#    #+#              #
-#    Updated: 2025/01/27 19:46:35 by abessa-m         ###   ########.fr        #
+#    Updated: 2025/02/05 22:22:22 by abessa-m         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		:= pipex
-LIBFT		:= ./ft_printf/libftprintf.a
+LIBFT		:= ./$(LIBFT-DIR)/libft.a
+LIBFT-DIR	:= libft
 #################################################################### Compiler  #
 CC			:= cc
 CFLAGS		:= -g -Wall -Werror -Wextra
@@ -21,7 +22,9 @@ AR			:= ar rcs
 ######################################################### Objects and Headers  #
 SRCS		= pipex.c pipex-exec.c
 OBJS		= $(SRCS:.c=.o)
-HEADERS		= pipex.h
+SRCS-BONUS	= b_pipex_bonus.c 
+OBJS-BONUS	= $(SRCS-BONUS:.c=.o)
+HEADERS		= pipex.h b_pipex_bonus.h
 ##################################################################### Targets  #
 all: $(LIBFT) $(NAME)
 
@@ -33,17 +36,19 @@ $(NAME): $(OBJS) $(LIBFT)
 	@$(CC) $(CFLAGS) -c $< -o $@ \
 
 $(LIBFT):
-	@make --no-print-directory -C ft_printf \
+	@make --no-print-directory -C $(LIBFT-DIR) \
 	&& echo "$(PURPLE)Library built: $(LIBFT)$(COR)"
 
-bonus: $(LIBFT)
+bonus: $(OBJS-BONUS) $(LIBFT)
+	@$(CC) $(CFLAGS) $(SRCS-BONUS) $(LIBFT) -o $(NAME) \
+	&& echo "$(GRAY)Compiled:$(COR) $(SRCS-BONUS)"
 
 clean:
 	@$(RM) *.o *.gch ; \
-	make --no-print-directory -C ft_printf clean \
+	make --no-print-directory -C $(LIBFT-DIR) clean \
 
 fclean: clean
-	@@make --no-print-directory -C ft_printf fclean \
+	@@make --no-print-directory -C $(LIBFT-DIR) fclean \
 	&& $(RM) $(NAME) \
 	&& echo "$(GRAY)$(NAME) removed$(COR)"
 
@@ -64,5 +69,5 @@ test: re
 	./pipex infile "cat -e" "grep 42" outfile; \
 	echo "\nReturn value: $$?" ; \
 	$(RM) *.o *.gch ; \
-	make --no-print-directory -C ft_printf clean ; \
+	make --no-print-directory -C $(LIBFT-DIR) clean ; \
 	echo "\ncat outfile:"; cat outfile

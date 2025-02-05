@@ -13,7 +13,7 @@
 #ifndef PIPEX_H
 # define PIPEX_H
 
-# include "./ft_printf/ft_printf.h"
+# include "./libft/libft.h"
 
 # include <unistd.h> //	close(), read(), write(),
 //	access(), dup(), dup2(), execve(), fork(), pipe(), unlink()
