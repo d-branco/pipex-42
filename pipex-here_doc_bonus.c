@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 09:29:13 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/02/13 09:40:34 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/02/13 09:58:43 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,15 @@ void	here_doc_get_next_line(char **argv, int *pipe_fd)
 	}
 }
 
-void	here_doc_initialize(char **argv)
+int	here_doc_initialize(int argc, char **argv)
 {
 	int		pipe_fd[2];
 	pid_t	pid;
+	int		output_fd;
 
+	output_fd = open(argv[argc - 1], O_WRONLY | O_CREAT | O_APPEND, 0777);
+	if (output_fd == -1)
+		perror("");
 	if (pipe(pipe_fd) == -1)
 		exit(0);
 	pid = fork();
@@ -48,4 +52,5 @@ void	here_doc_initialize(char **argv)
 	}
 	else
 		here_doc_get_next_line(argv, pipe_fd);
+	return (output_fd);
 }
