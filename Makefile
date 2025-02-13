@@ -6,7 +6,7 @@
 #    By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/15 10:43:59 by abessa-m          #+#    #+#              #
-#    Updated: 2025/02/05 22:22:22 by abessa-m         ###   ########.fr        #
+#    Updated: 2025/02/13 09:44:48 by abessa-m         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,11 +20,14 @@ CFLAGS		:= -g -Wall -Werror -Wextra
 RM			:= rm -f
 AR			:= ar rcs
 ######################################################### Objects and Headers  #
-SRCS		= pipex.c pipex-exec.c
+SRCS		= \
+	pipex.c pipex-exec.c 
 OBJS		= $(SRCS:.c=.o)
-SRCS-BONUS	= b_pipex_bonus.c 
+SRCS-BONUS	= \
+	pipex_bonus.c\
+	pipex-utils_bonus.c pipex-here_doc_bonus.c pipex-exec_bonus.c 
 OBJS-BONUS	= $(SRCS-BONUS:.c=.o)
-HEADERS		= pipex.h b_pipex_bonus.h
+HEADERS		= pipex.h pipex_bonus.h
 ##################################################################### Targets  #
 all: $(LIBFT) $(NAME)
 
